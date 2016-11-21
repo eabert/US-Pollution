@@ -1,33 +1,7 @@
 #OUR POLLUTION DATA 
 library(shiny)
 library(leaflet)
-
-zipdata <- pollution
-zipdata$Mean.Per.Day <- NULL
-zipdata$SO2.AQI <- NULL
-zipdata$X.2 <- NULL
-zipdata$X <- NULL
-zipdata$State.Code <- NULL
-zipdata$County.Code <- NULL
-zipdata$Site.Num <- NULL
-zipdata$Address <- NULL
-zipdata$State <- NULL
-zipdata$County <- NULL
-zipdata$City <- NULL
-zipdata$Date.Local <- NULL
-zipdata$NO2.Units <- NULL
-zipdata$NO2.1st.Max.Hour <- NULL
-zipdata$NO2.1st.Max.Value <- NULL
-zipdata$O3.Units <- NULL
-zipdata$O3.1st.Max.Hour <- NULL
-zipdata$O3.1st.Max.Value <- NULL
-zipdata$SO2.Units <- NULL
-zipdata$SO2.1st.Max.Hour <- NULL
-zipdata$SO2.1st.Max.Value <- NULL
-zipdata$CO.Units <- NULL
-zipdata$CO.1st.Max.Hour <- NULL
-zipdata$CO.1st.Max.Value <- NULL
-
+library(htmltools)
 
 shinyServer(
   function(input, output){
@@ -55,22 +29,37 @@ shinyServer(
       sizeBy <- input$size
       timeBy <- input$slide
       
+      zipdata <- switch(
+        timeBy-1999,
+        pollution.2000,
+        pollution.2001,
+        pollution.2002,
+        pollution.2003,
+        pollution.2004,
+        pollution.2005,
+        pollution.2006,
+        pollution.2007,
+        pollution.2008,
+        pollution.2009,
+        pollution.2010
+      )
+      
       colorData <- zipdata[[colorBy]]
       pal <- colorBin("Spectral", colorData, 7, pretty = FALSE)
       
       
-      radius <- zipdata[[sizeBy]] / max(zipdata[[sizeBy]]) * 30000
+      radius <- zipdata[[sizeBy]] / max(zipdata[[sizeBy]]) * 300000
       
+      
+       
       leafletProxy("map", data = zipdata) %>%
         clearShapes() %>%
         addCircles(~Longitude, ~Latitude, radius=radius,
                    stroke=FALSE, fillOpacity=0.4, fillColor=pal(colorData)) %>%
         addLegend("bottomleft", pal=pal, values=colorData, title=colorBy,
                   layerId="colorLegend")
+      
     })
-    
-    
-    
     
   }
 )

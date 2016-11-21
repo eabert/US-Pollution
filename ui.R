@@ -34,7 +34,7 @@ navbarPage("US Pollution", id="nav",
                                       
                                       h2("Data Explorer"),
                                       
-                                      sliderInput("slide", "Select a date", min = 0, max = 16, value = 0),
+                                      sliderInput("slide", "Select a date", min = 2000, max = 2010, value = 2000, step = 1, animate = TRUE),
                                                          
                                       
                                       selectInput("color", "Color", vars, selected = "NO2.Mean"),
